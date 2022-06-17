@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ClothBazar.Database
 {
-    public class CBContext : DbContext
+    public class CBContext : DbContext, IDisposable
     {
         public CBContext() : base("ClothBazarConnection")
         {
@@ -16,5 +16,10 @@ namespace ClothBazar.Database
         }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            var instance = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
+        }
     }
 }
