@@ -1,5 +1,7 @@
-﻿@{
+﻿@model ClothBazar.Web.ViewModels.HomeViewModels
+@{
     ViewBag.Title = "Home Page";
+    var firstCategory = Model.Categories.Where(category => category.ImageURL != null).First();
 }
 
 <!-- SLIDER -->
@@ -195,7 +197,7 @@
                 <div class="col-sm-6 col-md-4">
                     <div class="flat-image-box style-1 data-effect div-h22 clearfix">
                         <div class="item data-effect-item">
-                            @*<div class="inner">
+                            <div class="inner">
                                 @if (firstCategory != null)
                                 {
                                     <div class="thumb">
@@ -206,7 +208,7 @@
                                         <div class="overlay-effect bg-color-1"></div>
                                     </div>
                                 }
-                            </div>*@
+                            </div>
                         </div>
                     </div>
                 </div><!-- /.col-md-4 -->

@@ -1,4 +1,5 @@
-﻿@model ClothBazar.Entities.Product
+﻿@model List<ClothBazar.Entities.Category>
+@*@model ClothBazar.Web.ViewModels.CategoryViewModels.NewCategoryViewModel*@
 @{
     ViewBag.Title = "Create";
 }
@@ -6,6 +7,41 @@
 <h2>Create Product</h2>
 
 <form id="createProduct">
+    <div class="form-group">
+        <label>Category</label>
+        <select class="form-control" name="CategoryId">
+            @foreach (var category in Model)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Name</label>
+        <input class="form-control" name="Name" placeholder="Category Name" />
+    </div>
+    <div class="form-group">
+        <label>Description</label>
+        <input class="form-control" name="Description" placeholder="Category Description" />
+    </div>
+    <div class="form-group">
+        <label>Price</label>
+        <input class="form-control" name="Price" placeholder="Category Price" />
+    </div>
+    <button id="saveBtn" type="submit" class="btn btn-primary">Save</button>
+</form>
+
+
+@*<form id="createProduct">
+    <label>Category</label>
+    <select name="CategoryId">
+        @foreach (var category in Model)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </select>
+    <br />
+
     <label>Name</label>
     <input name="Name" />
     <br />
@@ -18,7 +54,7 @@
     <input name="Price" />
     <br />
     <button id="saveBtn" type="submit">Save</button>
-</form>
+</form>*@
 
 
 <script>
@@ -31,6 +67,7 @@
             .done(function (response) {
                 $("#tableContainer").html(response);
                 $("#actionContainer").html('');
+                location.reload();
             })
             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("FAIL");

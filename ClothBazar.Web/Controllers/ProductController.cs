@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ClothBazar.Entities;
+using ClothBazar.Web.ViewModels;
 
 namespace ClothBazar.Web.Controllers
 {
@@ -32,14 +33,25 @@ namespace ClothBazar.Web.Controllers
         // GET: Product/Create
         public ActionResult Create()
         {
-            return PartialView();
+            CategoriesService categoriesService = new CategoriesService();
+            var categories = categoriesService.GetCategories();
+            return PartialView(categories);
         }
 
         // Post: Product/Create
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(CategoryViewModels.NewCategoryViewModel model)
         {
-            _productsService.SaveProduct(product);
+            CategoriesService categoriesService = new CategoriesService();
+           
+            var newProduct = new Product();
+            newProduct.Name = model.Name;
+            newProduct.Description = model.Description;
+            newProduct.Price = model.Price;
+            //newProduct.CategoryId = model.CategoryId;
+            newProduct.Category = categoriesService.GetCategory(model.CategoryId);
+
+            _productsService.SaveProduct(newProduct);
             return RedirectToAction("ProductTable");
         }
 

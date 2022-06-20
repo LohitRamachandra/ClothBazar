@@ -16,6 +16,7 @@ namespace ClothBazar.Services
         }
         public List<Category> GetCategories()
         {
+
             using (var context = new CBContext())
             {
                  return context.Categories.ToList();
