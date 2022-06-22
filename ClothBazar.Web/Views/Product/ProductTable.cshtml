@@ -1,9 +1,8 @@
-﻿@model List<ClothBazar.Entities.Product>
+﻿@model ClothBazar.Web.ViewModels.ProductSearchViewModel
 @{
     ViewBag.Title = "ProductTable";
 }
 
-<h2>ProductTable</h2>
 
 <div>
     <form method="post">
@@ -11,8 +10,7 @@
             <div class="col-md-8">
                 <div class="form-group">
                     <label>Search</label>
-                    <input class="form-control" id="searchTXT" name="Search" />
-                    @*<input class="form-control" id="searchTxt" name="Search" value="@Model.SearchTerm" />*@
+                    <input class="form-control" id="searchTxt" name="Search" value="@Model.SearchTerm" />
                 </div>
             </div>
             <div class="col-md-4">
@@ -22,9 +20,9 @@
                         <div class="col-md-4 pr-0">
                             <button class="btn btn-primary form-control" type="button" id="searchBtn">Search</button>
                         </div>
-                        @*<div class="col-md-4 pr-0">
+                        <div class="col-md-4 pr-0">
                             <button class="btn btn-primary form-control" type="button" id="resetBtn">Reset</button>
-                        </div>*@
+                        </div>
                         <div class="col-md-4 pr-0">
                             <button class="btn btn-primary form-control" type="button" id="newBtn">New</button>
                         </div>
@@ -35,57 +33,90 @@
     </form>
 </div>
 
-<div >
-    <table class="table table-striped">
+<div>
+    <table id="ProductsTable" class="table table-striped">
         <thead>
             <tr>
-                <th scope="col">Product Name</th>
-                <th scope="col">Category</th>
-                <th scope="col">Price</th>
-                <th scope="col">Actions</th>
+                <th class="font-weight-bold">Product Name</th>
+                <th class="font-weight-bold">Category</th>
+                <th class="font-weight-bold">Price</th>
+                <th class="font-weight-bold wrap-td">Actions</th>
             </tr>
         </thead>
         <tbody>
+            @if (Model.Products != null && Model.Products.Count > 0)
+            {
 
-
-            @foreach (var product in Model)
+                foreach (var product in Model.Products)
+                {
+                    <tr>
+                        <td>@product.Name</td>
+                        <td>
+                            @if (product.Category != null)
+                            {
+                                <text>@product.Category.Name</text>
+                            }
+                            else
+                            {
+                                <text>-</text>
+                            }
+                        </td>
+                        <td>@product.Price</td>
+                        <td class="wrap-td">
+                            <button class="editBtn" data-id="@product.Id">Edit</button>
+                            <button class="deleteBtn" data-id="@product.Id">Delete</button>
+                            <button class="addtoCart" data-id="@product.Id">Add To Cart</button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
             {
                 <tr>
-                    <td>@product.Name</td>
-                    <td>
-                        @if (product.Category != null)
-                        {
-                            <text>@product.Category.Name</text>
-                        }
-                        else
-                        {
-                            <text>-</text>
-                        }
-                    </td>
-                    <td>@product.Price</td>
-                    <td>
-                        <button type="button" class="editBtn" data-id="@product.Id">Edit</button>
-                        <button type="button" class="deleteBtn" data-id="@product.Id">Delete</button>
-                    </td>
+                    <td class="text-danger" colspan="4">No Products found.</td>
                 </tr>
             }
-
         </tbody>
     </table>
+    <div>
+        @if (Model.Pager != null && Model.Pager.TotalPages > 1)
+        {
+
+            if (Model.Pager.CurrentPage > 1)
+            {
+                <button class="pageButtons" data-pageno="1">First</button>
+                <button class="pageButtons" data-pageno="@(Model.Pager.CurrentPage - 1)">Previous</button>
+            }
+
+            for (var page = Model.Pager.StartPage; page <= Model.Pager.EndPage; page++)
+            {
+                string activeClass = Model.Pager.CurrentPage == page ? "active bg-info" : string.Empty;
+
+                <button class="@activeClass pageButtons" data-pageno="@page">@page</button>
+            }
+
+            if (Model.Pager.CurrentPage < Model.Pager.TotalPages)
+            {
+                <button class="pageButtons" data-pageno="@(Model.Pager.CurrentPage + 1)">Next</button>
+                <button class="pageButtons" data-pageno="@Model.Pager.EndPage">Last</button>
+            }
+        }
+    </div>
 </div>
 
+
 <script>
-   
+
     $("#searchBtn").click(function () {
-        var searchValue = $("#searchTXT").val();
+        var searchValue = $("#searchTxt").val();
 
         $.ajax({
-                url: '/Product/ProductTable',
-                data: {
-                    search: searchValue
-                }
-            })
-            .done(function(response) {
+            url: '/Product/ProductTable',
+            data: {
+                search: searchValue
+            }
+        })
+            .done(function (response) {
                 $("#tableContainer").html(response);
             })
             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -93,11 +124,11 @@
             });
     });
 
-    $("#newBtn").click(function() {
+    $("#newBtn").click(function () {
         $.ajax({
-                url: '/Product/Create'
-            })
-            .done(function(response) {
+            url: '/Product/Create'
+        })
+            .done(function (response) {
                 $("#actionContainer").html(response);
             })
             .fail(function (XMLHttpRequest, textStatus, errorThrown) {
@@ -105,15 +136,26 @@
             });
     });
 
-    
+    var products = [];
+
+    $(".addtoCart").click(function () {
+        var productId = $(this).attr('data-id');
+
+        products.push(productId);
+
+        $.cookie('CardProducts', products.join('-'), {path: '/'});
+        alert("Product added to cart.");
+        $.ajax({
+        });
+    });
 
     $(".editBtn").click(function () {
         $.ajax({
-                url: '/Product/Edit',
-                data: {
-                    ID: $(this).attr('data-id')
-                }
-            })
+            url: '/Product/Edit',
+            data: {
+                ID: $(this).attr('data-id')
+            }
+        })
             .done(function (response) {
                 $("#actionContainer").html(response);
             })
@@ -123,22 +165,57 @@
     });
 
     $(".deleteBtn").click(function () {
-        var confirmDelete = confirm("Are you sure you want to delete this product?");
-        if (confirmDelete)
-        {
-            $.ajax({
-                    type: 'POST',
-                    url: '/Product/Delete',
-                    data: {
-                        ID: $(this).attr('data-id')
-                    }
-                })
-                .done(function (response) {
-                    $("#tableContainer").html(response);
-                })
-                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert("FAIL");
-                });
-        }
+
+        swal({
+                title: "Confirm?",
+            text: "Are you sure you want to delete this product?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+
+                    $.ajax({
+                                type: 'POST',
+                                url: '/Product/Delete',
+                                data: {
+                                    ID: $(this).attr('data-id')
+                                }
+                            })
+                        .done(function (response) {
+                            swal("Record deleted Successfully.", {
+                                    icon: "success",
+                                    //$("#tableContainer").html(response);
+                                })
+                                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                                    alert("FAIL");
+                                });
+
+                    
+                        });
+
+                    } else {
+                    swal("Your record is safe!");
+                }
+            });
+
+
+        //var confirmDelete = confirm("Are you sure you want to delete this product?");
+        //if (confirmDelete) {
+        //    $.ajax({
+        //        type: 'POST',
+        //        url: '/Product/Delete',
+        //        data: {
+        //            ID: $(this).attr('data-id')
+        //        }
+        //    })
+        //        .done(function (response) {
+        //            $("#tableContainer").html(response);
+        //        })
+        //        .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+        //            alert("FAIL");
+        //        });
+        //}
     });
 </script>

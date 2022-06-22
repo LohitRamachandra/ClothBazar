@@ -57,6 +57,14 @@
     <Compile Include="Migrations\202206170834170_ImageURLCoulmnAddedToCategoryTable.Designer.cs">
       <DependentUpon>202206170834170_ImageURLCoulmnAddedToCategoryTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202206201017025_addedIsfeatured.cs" />
+    <Compile Include="Migrations\202206201017025_addedIsfeatured.Designer.cs">
+      <DependentUpon>202206201017025_addedIsfeatured.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202206220858384_AddImageURLColumnToProductTable.cs" />
+    <Compile Include="Migrations\202206220858384_AddImageURLColumnToProductTable.Designer.cs">
+      <DependentUpon>202206220858384_AddImageURLColumnToProductTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -76,6 +84,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202206170834170_ImageURLCoulmnAddedToCategoryTable.resx">
       <DependentUpon>202206170834170_ImageURLCoulmnAddedToCategoryTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206201017025_addedIsfeatured.resx">
+      <DependentUpon>202206201017025_addedIsfeatured.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202206220858384_AddImageURLColumnToProductTable.resx">
+      <DependentUpon>202206220858384_AddImageURLColumnToProductTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -16,6 +16,7 @@ namespace ClothBazar.Database
         }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
+        public object Configurations { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
